@@ -1,0 +1,125 @@
+﻿<Presentation:View x:Class="outcold.MoMaSy.Views.Settings.AccountsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Presentation="clr-namespace:outcold.MoMaSy.Core.Presentation"
+             xmlns:BindingModels="clr-namespace:outcold.MoMaSy.BindingModels.Settings">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Margin="7,7,0,7" Grid.Row="0" >
+                Edit or add your accounts:
+        </TextBlock>
+        
+        <Button Click="AddButtonClick" ToolTip="Add new account"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Grid.Row="2" Margin="0, 7, 7, 0"
+                Style="{StaticResource LinkButton}">
+            Add
+        </Button>
+
+        <ListView Grid.Row="2" Margin="7, 7, 93, 7"
+                  ItemsSource="{Binding Path=Items, Mode=OneWay}" 
+                  SelectedValue="{Binding Path=SelectedBindingModel, Mode=TwoWay}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  x:Name="ListViewAccounts"
+                  SelectionChanged="ListViewAccountsSelectedItemChanged"
+                  SelectionMode="Single">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type BindingModels:AccountBindingModel}" >
+
+                    <Grid Height="36px"  >
+
+                        <Grid.Resources>
+                            <Style TargetType="TextBlock" x:Key="TextBlockHiddenDependend">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsHidden}" Value="True">
+                                        <Setter Property="Opacity" Value="0.5" />
+                                        <Setter Property="ToolTip" Value="Current account is hidden" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=HasChanges}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="ToolTip" Value="Current account has unsaved changes" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Resources>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                    Visibility="{Binding Path=IsEditMode, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+
+                            <TextBlock DockPanel.Dock="Left" Text="{Binding Path=AccountFullName, Mode=OneWay}" 
+                                       Margin="7,0,3,0"
+                                      Style="{StaticResource TextBlockHiddenDependend}" VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" 
+                                    Visibility="{Binding Path=IsEditMode, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+
+                            <Button Click="EditButtonClick" Margin="7,2,7,3"
+                                    HorizontalAlignment="Right"
+                                    Visibility="{Binding Path=IsSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Hidden}"
+                                    ToolTip="Start edit selected account">
+                                <Image Source="/MoMaSy;component/Resources/Images/Buttons/edit_24x24.png" Width="24" Height="24"  />
+                            </Button>
+
+                            <Button Click="DeleteButtonClick" Margin="0,2,7,3"
+                                    HorizontalAlignment="Right"
+                                    Visibility="{Binding Path=IsSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Hidden}"
+                                    ToolTip="Delete selected account">
+                                <Image Source="/MoMaSy;component/Resources/Images/Buttons/delete_24x24.png" Width="24" Height="24"  />
+                            </Button>
+
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding Path=IsEditMode, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                            <TextBox MaxLength="30" VerticalAlignment="Center"
+                                     Text="{Binding Path=AccountName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}" 
+                                     Margin="7,0,0,0"
+                                     Width="Auto">
+                                <TextBox.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditMode, Mode=OneWay}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding Path=., RelativeSource={RelativeSource Mode=Self}}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <ComboBox DockPanel.Dock="Left" VerticalAlignment="Center"
+                                      ItemsSource="{Binding Path=Collection, Mode=OneTime, Source={StaticResource CurrencyTypesDictionary}}"
+                                      DisplayMemberPath="CurrencyName"
+                                      Margin="7,0,0,0"
+                                      SelectedItem="{Binding Path=CurrencyType, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+
+                            <TextBlock Margin="7,0,3,0" VerticalAlignment="Center">Is Hidden:</TextBlock>
+
+                            <CheckBox DockPanel.Dock="Left" VerticalAlignment="Center"
+                                      Margin="0,0,3,0"
+                                      IsChecked="{Binding Path=IsHidden, Mode=TwoWay}"/>
+
+                        </StackPanel>
+                    </Grid>
+                   
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+    </Grid>
+</Presentation:View>

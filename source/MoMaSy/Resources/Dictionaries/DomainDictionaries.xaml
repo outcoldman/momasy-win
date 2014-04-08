@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Model="clr-namespace:outcold.MoMaSy.Model.Dictionaries">
+    <Model:CurrencyTypesDictionary x:Key="CurrencyTypesDictionary" />
+    <Model:AccountsDictionary x:Key="AccountsDictionary" />
+    <Model:TransactionTypesDictionary x:Key="TransactionTypesDictionary" />
+</ResourceDictionary>

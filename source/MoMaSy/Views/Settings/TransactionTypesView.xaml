@@ -1,0 +1,125 @@
+﻿<Presentation:View x:Class="outcold.MoMaSy.Views.Settings.TransactionTypesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Presentation="clr-namespace:outcold.MoMaSy.Core.Presentation"
+             xmlns:BindingModels="clr-namespace:outcold.MoMaSy.BindingModels.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Margin="7,7,0,7" Grid.Row="0" >
+                Edit or add your transaction types:
+        </TextBlock>
+
+        <Button Click="AddButtonClick" ToolTip="Add new account"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Grid.Row="2" Margin="0, 7, 7, 0"
+                Style="{StaticResource LinkButton}">
+            Add
+        </Button>
+
+        <TreeView x:Name="TypesTreeView" Grid.Row="1" Margin="7, 7, 93, 7" ItemsSource="{Binding Path=Roots, Mode=OneWay}"
+                  SelectedItemChanged="TypesTreeViewSelectedItemChanged">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type BindingModels:TransactionTypeBindingModel}"
+                    ItemsSource="{Binding Path=Children, Mode=OneTime}"  >
+
+                    <Grid Height="36px"  >
+
+                        <Grid.Resources>
+                            <Style TargetType="TextBlock" x:Key="TextBlockHiddenDependend">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsHidden}" Value="True">
+                                        <Setter Property="Opacity" Value="0.5" />
+                                        <Setter Property="ToolTip" Value="Current transaction type is hidden" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=HasChanges}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="ToolTip" Value="Transaction type has unsaved changes" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Resources>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Path=TransactionTypeName, Mode=OneWay}" 
+                                       Margin="7,0,3,0"
+                                       Grid.Row="0" Grid.Column="0"
+                                       Visibility="{Binding Path=IsEditMode, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"
+                                       Style="{StaticResource TextBlockHiddenDependend}" VerticalAlignment="Center"/>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" >
+                            <StackPanel.Visibility>
+                                <MultiBinding Converter="{StaticResource ResourceKey=BooleanToVisibilityMultiConverter}">
+                                    <Binding Path="IsSystem" Mode="OneTime" Converter="{StaticResource BooleanToVisibilityConverter}" ConverterParameter="Inverse" />
+                                    <Binding Path="IsEditMode" Mode="OneWay" Converter="{StaticResource BooleanToVisibilityConverter}" ConverterParameter="Inverse" />
+                                </MultiBinding>
+                            </StackPanel.Visibility>
+
+                            <Button Click="EditButtonClick" Margin="7,2,7,3"
+                                    HorizontalAlignment="Right"
+                                    Visibility="{Binding Path=IsSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Hidden}"
+                                    ToolTip="Start edit selected transaction type">
+                                <Image Source="/MoMaSy;component/Resources/Images/Buttons/edit_24x24.png" Width="24" Height="24"  />
+                            </Button>
+
+                            <Button Click="DeleteButtonClick" Margin="0,2,7,3"
+                                    HorizontalAlignment="Right"
+                                    Visibility="{Binding Path=IsSelected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Hidden}"
+                                    ToolTip="Delete transaction type">
+                                <Image Source="/MoMaSy;component/Resources/Images/Buttons/delete_24x24.png" Width="24" Height="24"  />
+                            </Button>
+                            
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding Path=IsEditMode, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                            <TextBox MaxLength="50" VerticalAlignment="Center"
+                                     Text="{Binding Path=TransactionTypeName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}" 
+                                     Width="Auto"
+                                     Margin="7,0,0,0"
+                                     Padding="0,0,10,0">
+                                <TextBox.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditMode, Mode=OneWay}" Value="True">
+                                                <Setter Property="FocusManager.FocusedElement" Value="{Binding Path=., RelativeSource={RelativeSource Mode=Self}}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <TextBlock Margin="7,0,3,0" VerticalAlignment="Center">Is Hidden:</TextBlock>
+
+                            <CheckBox VerticalAlignment="Center"
+                                      IsChecked="{Binding Path=IsHidden, Mode=TwoWay}"
+                                      Margin="0,0,7,0"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</Presentation:View>

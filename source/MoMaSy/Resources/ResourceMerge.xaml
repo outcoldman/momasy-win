@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Presentation="clr-namespace:outcold.MoMaSy.Core.Presentation">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MoMaSy;component/Resources/Dictionaries/Converters.xaml" />
+        <ResourceDictionary Source="/MoMaSy;component/Resources/Dictionaries/Styles.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

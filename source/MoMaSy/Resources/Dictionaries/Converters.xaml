@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Converters="clr-namespace:outcold.MoMaSy.Core.Converters">
+
+    <Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Converters:BooleanToVisibilityMultiConverter x:Key="BooleanToVisibilityMultiConverter" />
+    <Converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter" />
+    <Converters:EnumToVisibilityConverter x:Key="EnumToUnvisibilityConverter" ConverterParameters="Inverse" />
+    
+</ResourceDictionary>
